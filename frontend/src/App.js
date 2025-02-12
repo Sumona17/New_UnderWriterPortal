@@ -80,7 +80,7 @@ const AppLayout = () => {
               height: '60px',
             }}
           />
-          {!collapsed && <h4 style={{ color: 'white', textAlign: 'center' }}>Underwriting Workbench</h4>}
+          {!collapsed && <h4 style={{ color: 'white', textAlign: 'center' }}>Intelligent Risk Assessment</h4>}
           <Divider
             variant="dotted"
             style={{
