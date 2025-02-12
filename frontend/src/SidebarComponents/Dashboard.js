@@ -128,7 +128,7 @@ const Dashboard = () => {
     donutChartRef.current.chartInstance = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Commercial Property', 'General Liability'],
+        labels: ['General Liability', 'Commercial Property'],
         datasets: [{
           data: [3000000, 7000000], // Updated to millions
           backgroundColor: ['#FF69B4', '#36a2eb']
