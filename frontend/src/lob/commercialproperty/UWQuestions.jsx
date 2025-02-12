@@ -159,7 +159,19 @@ const UWQuestions = ({ onNext }) => {
               }}
             />
             <h5 style={{ marginTop: "20px" }}>Claim Propensity</h5>
-            <div>
+            <div
+              style={{
+                padding: '16px',
+                border: '1px solid #e1e1e1',
+                borderRadius: '12px',
+                display: 'block',
+                width: '100%',
+                backgroundColor: 'white',
+                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                transition: 'box-shadow 0.2s ease-in-out',
+                marginBottom: '20px'
+              }}
+            >
               <Popover
                 content={<PriorityPopup predictionData="Medium" record={record} />}
                 trigger="click"
@@ -173,7 +185,7 @@ const UWQuestions = ({ onNext }) => {
                     width:"150px",
                     height:"40px",
                     padding: "5px 20px", // Balanced padding for better spacing
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.4)",
+                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                     fontWeight: "600",
                     borderRadius: "4px", // Rounded corners for a modern look
                     color: "white",
