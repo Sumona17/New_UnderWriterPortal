@@ -12,7 +12,7 @@ const Login = () => {
         <h1 className="login-title">
           HI, <span className="welcome">WELCOME!</span>
         </h1>
-        <p className="login-subtitle">Login to your Underwriter Workbench.</p>
+        <p className="login-subtitle">Login to your Intelligent Risk Assessment</p>
         <form>
           <div className="input-group">
             <input type="text" placeholder="Username" className="login-input" />
