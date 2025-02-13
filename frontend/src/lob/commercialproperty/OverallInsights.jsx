@@ -108,7 +108,8 @@ function OverallInsights() {
                 "Mitigation steps to reduce this risk ? \nAns: <Answer with mitigation steps>",
                 "How does the building mitigate the risks? \nAns: <Answer>",
                 "Does the inspection document capture the mitigation steps? \nAns: <Answer How it captures>",
-                "Was the building inspected for the mitigation of risk? \nAns: <Answer>"
+                "Was the building inspected for the mitigation of risk? \nAns: <Answer>",
+                "Are there any 'Causes of Fire' related to this risk mentioned in pubic data but not captured in the Inspection report? \nAns: <Answer>"
               ]
             }
       }
