@@ -17,6 +17,7 @@ function CreateSubmission({ onNext }) {
     const [fileList, setFileList] = useState([]);
     const [formData, setFormData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [loadingEmail, setLoadingEmail] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -180,6 +181,43 @@ function CreateSubmission({ onNext }) {
 
     // const pdfData = "Aspyre Metro Application_print.pdf"; // Your PDF file path
 
+    const handleEmailPrefill = async () => {
+        try {
+            setLoadingEmail(true);
+            setError(null);
+            setSuccess(false);
+
+            const apiResponse = await fetch(`${PROD_URL}/api/prefill_email`, {
+                method: 'GET'
+            });
+
+            if (!apiResponse.ok) {
+                const errorData = await apiResponse.json();
+                throw new Error(errorData.message || 'Failed to process PDF');
+            }
+
+            const responseData = await apiResponse.json();
+            console.log('API Response:', responseData);
+
+            if (!responseData.application_details) {
+                throw new Error('Invalid response data received');
+            }
+
+            // Update form states with response data
+            updateEmailFormStates(responseData.application_details);
+
+            setSuccess(true);
+            message.success('Form prefilled successfully');
+
+        } catch (error) {
+            console.error('Prefill Error:', error);
+            setError(error.message);
+            message.error(`Failed to prefill form: ${error.message}`);
+        } finally {
+            setLoadingEmail(false);
+        }
+    };
+
     const handlePrefill = async () => {
         try {
             setLoading(true);
@@ -339,6 +377,61 @@ function CreateSubmission({ onNext }) {
         }
     };
 
+    const updateEmailFormStates = (data) => {
+        if (!data || !Array.isArray(data) || data.length === 0) return;
+        
+        // Extract the first item in the array, which contains the insured details
+        const insuredDetails = data[0];
+        
+        const { insuredInfo, insuredMailingAddress, insuredContactPerson } = insuredDetails;
+        
+        // Update basicInfo state - handle all fields from insuredInfo
+        if (insuredInfo) {
+            setBasicInfo(prevState => ({
+                ...prevState,
+                orgName: insuredInfo.orgName || '',
+                orgType: insuredInfo.orgType || '',
+                dba: insuredInfo.dba || '',
+                fein: insuredInfo.fein || '',
+                tin: insuredInfo.tin || '',
+                businessActivity: insuredInfo.businessActivity || '',
+                sicCode: insuredInfo.sicCode || '',
+                sicDescription: insuredInfo.sicDescription || '',
+                naics: insuredInfo.naics || '',
+                naicsDescription: insuredInfo.naicsDescription || '',
+                yearsInBusiness: insuredInfo.yearsInBusiness || '',
+                status: insuredInfo.partyStatus || 'active'
+            }));
+        }
+        
+        // Rest of the function remains the same...
+        if (insuredMailingAddress && insuredMailingAddress[0]) {
+            const address = insuredMailingAddress[0];
+            setLocationInfo(prevState => ({
+                ...prevState,
+                pinCode: address.pinCode || '',
+                addressLine1: address.addressLine1 || '',
+                addressLine2: address.addressLine2 || '',
+                county: address.county || '',
+                city: address.city || '',
+                state: address.state || '',
+                country: address.country || ''
+            }));
+        }
+        
+        if (insuredContactPerson) {
+            setInsuredInfo(prevState => ({
+                ...prevState,
+                firstName: insuredContactPerson.firstName || '',
+                middleName: insuredContactPerson.middleName || '',
+                lastName: insuredContactPerson.lastName || '',
+                emailId: insuredContactPerson.emailId || '',
+                countryCode: insuredContactPerson.countryCode || '',
+                phoneNumber: insuredContactPerson.phoneNumber || '',
+                website: insuredContactPerson.website || ''
+            }));
+        }
+    };
 
 
     return (
@@ -357,6 +450,9 @@ function CreateSubmission({ onNext }) {
                                     </Button>
                                     <Button type="primary" onClick={handlePrefill} loading={loading} style={{ width: "5rem", backgroundColor: "blue" }}>
                                         Prefill
+                                    </Button>
+                                    <Button type="primary" onClick={handleEmailPrefill} loading={loadingEmail} style={{ width: "7rem", backgroundColor: "blue" }}>
+                                        Email Prefill
                                     </Button>
                                     <Tooltip title={isEditMode ? "Save" : "Edit"}>
                                         <Button 
