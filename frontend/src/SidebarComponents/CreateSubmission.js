@@ -237,7 +237,7 @@ function CreateSubmission({ onNext }) {
             const formData = new FormData();
             formData.append('file', file);
 
-            const apiResponse = await fetch(`${PROD_URL}/api/process_doc`, {
+            const apiResponse = await fetch(`${PROD_URL}/api/prefill_upload`, {
                 method: 'POST',
                 body: formData,
             });
@@ -256,7 +256,7 @@ function CreateSubmission({ onNext }) {
 
             // Update form states with response data
             updateFormStates(responseData.application_details);
-
+           
             setSuccess(true);
             message.success('Form prefilled successfully');
 
@@ -282,9 +282,9 @@ function CreateSubmission({ onNext }) {
             const formData = new FormData();
             formData.append('file', file);
 
-            console.log("Sending request to:", `${PROD_URL}/api/process_doc`);
+            console.log("Sending request to:", `${PROD_URL}/api/prefill_upload`);
 
-            const response = await fetch(`${PROD_URL}/api/process_doc`, {
+            const response = await fetch(`${PROD_URL}/api/prefill_upload`, {
                 method: 'POST',
                 body: formData,
             });
@@ -324,9 +324,11 @@ function CreateSubmission({ onNext }) {
 
 
     const updateFormStates = (data) => {
-        if (!data) return;
+        if (!Array.isArray(data) || data.length === 0) return;
+        const insuredDetails = data[0]; // Correctly access the first item
 
-        const { insuredInfo, insuredMailingAddress, insuredContactPerson } = data;
+
+        const { insuredInfo, insuredMailingAddress, insuredContactPerson } = insuredDetails;
 
         // Update basicInfo state - handle all fields from insuredInfo
         if (insuredInfo) {
@@ -445,10 +447,10 @@ function CreateSubmission({ onNext }) {
                             <Col span={22}></Col>
                             <Col span={2}>
                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "0.5rem", marginTop: "0.5rem" }}>
-                                    <Button type="primary" onClick={onUpload} style={{ width: "5rem", backgroundColor: "blue" }}>
+                                    {/* <Button type="primary" onClick={onUpload} style={{ width: "5rem", backgroundColor: "blue" }}>
                                         Upload
-                                    </Button>
-                                    <Button type="primary" onClick={handlePrefill} loading={loading} style={{ width: "5rem", backgroundColor: "blue" }}>
+                                    </Button> */}
+                                    <Button type="primary" onClick={onUpload} loading={loading} style={{ width: "5rem", backgroundColor: "blue" }}>
                                         Prefill
                                     </Button>
                                     <Button type="primary" onClick={handleEmailPrefill} loading={loadingEmail} style={{ width: "7rem", backgroundColor: "blue" }}>
@@ -883,9 +885,10 @@ function CreateSubmission({ onNext }) {
                 open={isModalOpen}
                 onCancel={handleCancel}
                 footer={[
-                    <Button key="cancel" onClick={handleCancel}>
-                        OK
-                    </Button>
+                    <Button key="cancel" onClick={() => { handlePrefill(); handleCancel(); }}>
+                    OK
+                </Button>
+                
                 ]}
                 centered
             >
